@@ -12,11 +12,13 @@ public class Main {
         Person child2 = new Person("Ksawery","Czeremba", LocalDate.of(1955,8,12));
         Person child3 = new Person("Brajan","Czeremba", LocalDate.of(1959,2,10));
         Person child4 = new Person("Dżesika","Mercedes", LocalDate.of(2000,7,11));
+        
         people.add(parent);
         people.add(child1);
         people.add(child2);
         people.add(child3);
         people.add(child4);
+
         parent.adopt(child1);
         parent.adopt(child2);
         parent.adopt(child3);
