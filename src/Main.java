@@ -5,6 +5,7 @@ public class Main {
     public static void main(String[] args) {
 //
         List<Person> people = Person.fromCsv("family.csv");
+
         System.out.println("pi/2");
         //w source nie dajemy plikow które są plikami źródłowymi
 
