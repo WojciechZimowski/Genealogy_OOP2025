@@ -92,12 +92,17 @@ public class Person implements Comparable<Person>{
 /// AmbuguousPersonException PD
     public static List<Person> fromCsv(String path){
         List<Person> people = new ArrayList<>();
+        Map<String,Person> personMap=new HashMap<>();
         Set<String> fullNames = new HashSet<>();
+        List<String[]> lines = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line;
             br.readLine();
             while((line = br.readLine()) != null){
+                String[] columns = line.split(",",-1);
+                lines.add(columns);
+
                 Person readPerson = fromCsvLine(line);
                 String fullName = readPerson.getFname() + " " + readPerson.getLname();
 
@@ -106,6 +111,33 @@ public class Person implements Comparable<Person>{
                 }
                 fullNames.add(fullName);
                 people.add(readPerson);
+                personMap.put(fullName,readPerson);
+            }
+            for(String[] columns : lines){
+                String chName=columns[0].trim();
+                String parent1 = columns.length >3 ? columns[3].trim() : "";
+                String parent2 = columns.length >4 ? columns[4].trim() : "";
+
+                Person child = personMap.get(chName);
+                if(child == null)continue;
+
+                if(isNotEmpty(parent1)) {
+                    Person parent = personMap.get(parent1);
+                    if (parent != null) {
+                        parent.adopt(child);
+
+                    }
+                }
+                if(isNotEmpty(parent2)){
+                    Person parent = personMap.get(parent2);
+                    if(parent != null){
+                        parent.adopt(child);
+
+                        }
+
+
+                    }
+
             }
         } catch (FileNotFoundException e) {
             System.err.println("File doesn't exist");
