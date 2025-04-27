@@ -4,10 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Person implements Comparable<Person>{
     private String fname, lname;
@@ -87,17 +84,27 @@ public class Person implements Comparable<Person>{
                 throw new NegativeLifespanException(flname[0], flname[1]);
             }
         }
+
         return new Person(flname[0], flname[1], birthDate, deathDate);
     }
 
+
+
     public static List<Person> fromCsv(String path){
         List<Person> people = new ArrayList<>();
+        Set<String> fullNames = new HashSet<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line;
             br.readLine();
             while((line = br.readLine()) != null){
                 Person readPerson = fromCsvLine(line);
+                String fullName = readPerson.getFname() + " " + readPerson.getLname();
+
+                if(fullNames.contains(fullName)){
+                    throw new AmbiguousPersonException(readPerson.getFname(),readPerson.getLname());
+                }
+                fullNames.add(fullName);
                 people.add(readPerson);
             }
         } catch (FileNotFoundException e) {
@@ -106,6 +113,8 @@ public class Person implements Comparable<Person>{
             System.err.println("Error during reading file");
         } catch (NegativeLifespanException e){
             System.err.println(e.getMessage());
+        } catch (AmbiguousPersonException e) {
+            throw new RuntimeException(e);
         }
         return people;
     }
