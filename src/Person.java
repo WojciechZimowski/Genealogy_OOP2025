@@ -203,6 +203,7 @@ public class Person implements Comparable<Person>{
 //    public static List<Person> sortPeopleByBirthYear(List<Person>people){
 //        return people.stream().sorted();
 //    }
+    //6 też
 
 
 
