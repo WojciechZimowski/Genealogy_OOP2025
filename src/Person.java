@@ -199,6 +199,12 @@ public class Person implements Comparable<Person>{
         Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
         return people.stream().filter(pipla -> getFullname.apply(pipla).contains(key)).collect(Collectors.toList());
     }
+    // nasz komparator ma porównywać po samym roku
+    public static List<Person> sortPeopleByBirthYear(List<Person>people){
+        return people.stream().sorted();
+    }
+
+
 
 
     public void setFather(Person parent) {
