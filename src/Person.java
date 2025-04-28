@@ -14,6 +14,8 @@ import java.util.function.Function;
 public class Person implements Comparable<Person>{
     private String fname, lname;
     private LocalDate birthDate;
+    private Person father;
+    private Person mother;
 
     private LocalDate deathDate;
     private Set<Person> children;
@@ -135,7 +137,7 @@ public class Person implements Comparable<Person>{
     }
 
 
-    public String toUML(){
+    public String toUMLObject(){
         Function<String, String> addQuotes = text -> "\"" + text + "\"";
         Function<Person, String> getFullnameWithSpace = pipla -> pipla.fname + " " + pipla.lname;
         Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
@@ -144,8 +146,46 @@ public class Person implements Comparable<Person>{
                         + " as " + getFullname.apply(pipla));
         return toUMLline.apply(this);
     }
+    public String toUMLRelation(){
+      //this to osoba z lewej
+        // father i mother z prawej
+        //wywołać na this
+        Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
+        Function<Person,String> getFatherRelation = pipla -> {
+            if(pipla.father != null)
+                return getFullname.apply(pipla)+
+                        " <-- "+getFullname.apply(pipla.father);
+            return "";
+        };
+
+        Function<Person,String> getMotherRelation = pipla -> {
+            if(pipla.mother != null)
+            return getFullname.apply(pipla)+
+                " <-- "+getFullname.apply(pipla.mother);
+            return "";
+        };
+        Function<Person,String> getAllRelations = pipla ->{
+            String motherString = getMotherRelation.apply(pipla);
+            String fatherString = getFatherRelation.apply(pipla);
+            if(motherString != "" && fatherString !=""){
+                return  motherString + "\n" + fatherString;
+            }
+            return motherString + fatherString;
+        };
+        return getAllRelations.apply(this);
+
+    }
+
 
     public static boolean isNotEmpty(String s){
         return s != null && s != "" && s != " " && s != "\t";
+    }
+    public static String toUmlfile(List<Person> people){
+
+        return "";
+    }
+
+    public void setFather(Person parent) {
+        this.father = parent;
     }
 }
