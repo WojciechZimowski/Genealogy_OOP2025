@@ -1,10 +1,15 @@
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
 
 public class Person implements Comparable<Person>{
     private String fname, lname;
@@ -84,59 +89,35 @@ public class Person implements Comparable<Person>{
                 throw new NegativeLifespanException(flname[0], flname[1]);
             }
         }
-
         return new Person(flname[0], flname[1], birthDate, deathDate);
     }
 
-
-/// AmbuguousPersonException PD
     public static List<Person> fromCsv(String path){
         List<Person> people = new ArrayList<>();
-        Map<String,Person> personMap=new HashMap<>();
-        Set<String> fullNames = new HashSet<>();
-        List<String[]> lines = new ArrayList<>();
         try{
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line;
             br.readLine();
             while((line = br.readLine()) != null){
-                String[] columns = line.split(",",-1);
-                lines.add(columns);
-
                 Person readPerson = fromCsvLine(line);
-                String fullName = readPerson.getFname() + " " + readPerson.getLname();
-
-                if(fullNames.contains(fullName)){
-                    throw new AmbiguousPersonException(readPerson.getFname(),readPerson.getLname());
+                if (people.size() == 0){
+                    people.add(readPerson);
                 }
-                fullNames.add(fullName);
-                people.add(readPerson);
-                personMap.put(fullName,readPerson);
-            }
-            for(String[] columns : lines){
-                String chName=columns[0].trim();
-                String parent1 = columns.length >3 ? columns[3].trim() : "";
-                String parent2 = columns.length >4 ? columns[4].trim() : "";
-
-                Person child = personMap.get(chName);
-                if(child == null)continue;
-
-                if(isNotEmpty(parent1)) {
-                    Person parent = personMap.get(parent1);
-                    if (parent != null) {
-                        parent.adopt(child);
-
+                for (int i = 0; i < people.size(); i++){
+                    Person existingPerson = people.get(i);
+                    if(!existingPerson.fname.equals(readPerson.fname) ||
+                            !existingPerson.lname.equals(readPerson.lname)){
+                        people.add(readPerson);
+                    }
+                    if(!existingPerson.fname.equals(readPerson.fname) ||
+                            !existingPerson.lname.equals(readPerson.lname)){
+                        people.add(readPerson);
+                    }
+                    if(!existingPerson.fname.equals(readPerson.fname) ||
+                            !existingPerson.lname.equals(readPerson.lname)){
+                        people.add(readPerson);
                     }
                 }
-                if(isNotEmpty(parent2)){
-                    Person parent = personMap.get(parent2);
-                    if(parent != null){
-                        parent.adopt(child);
-
-                        }
-
-
-                    }
 
             }
         } catch (FileNotFoundException e) {
@@ -145,14 +126,24 @@ public class Person implements Comparable<Person>{
             System.err.println("Error during reading file");
         } catch (NegativeLifespanException e){
             System.err.println(e.getMessage());
-        } catch (AmbiguousPersonException e) {
-            throw new RuntimeException(e);
         }
         return people;
     }
-    /// ////////////////////////////////////
+
+    public String toUMLline(Person pipla){
+        return "aaaaa";
+    }
 
 
+    public String toUML(){
+        Function<String, String> addQuotes = text -> "\"" + text + "\"";
+        Function<Person, String> getFullnameWithSpace = pipla -> pipla.fname + " " + pipla.lname;
+        Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
+        Function<Person, String> toUMLline = pipla ->
+                String.format("object " + addQuotes.apply(getFullnameWithSpace.apply(pipla))
+                        + " as " + getFullname.apply(pipla));
+        return toUMLline.apply(this);
+    }
 
     public static boolean isNotEmpty(String s){
         return s != null && s != "" && s != " " && s != "\t";
