@@ -4,23 +4,22 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Person implements Comparable<Person>{
+public class Person implements Comparable<Person> {
     private String fname, lname;
-    LocalDate birthDate;
+    private LocalDate birthDate;
     private Person father;
     private Person mother;
 
     private LocalDate deathDate;
     private Set<Person> children;
-    public boolean adopt(Person child){
+
+    public boolean adopt(Person child) {
         return children.add(child);
     }
 
@@ -31,6 +30,7 @@ public class Person implements Comparable<Person>{
         this.deathDate = deathDate;
         this.children = new TreeSet<>();
     }
+
     public Person(String fname, String lname, LocalDate birthDate) {
         this.fname = fname;
         this.lname = lname;
@@ -38,20 +38,21 @@ public class Person implements Comparable<Person>{
         this.children = new TreeSet<>();
     }
 
-    public Person getYoungestChild(){
+    public Person getYoungestChild() {
 //        if(children.isEmpty())
 //            return null;
         LocalDate youngestChildAge = LocalDate.MIN;
         Person youngestChild = null;
-        for (Person child : children){
-            if(child.birthDate.isAfter(youngestChildAge)) {
+        for (Person child : children) {
+            if (child.birthDate.isAfter(youngestChildAge)) {
                 youngestChildAge = child.birthDate;
                 youngestChild = child;
             }
         }
         return youngestChild;
     }
-    public List<Person> getChildren(){
+
+    public List<Person> getChildren() {
         return List.copyOf(children);
     }
 
@@ -72,6 +73,14 @@ public class Person implements Comparable<Person>{
         return deathDate;
     }
 
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
     public void setDeathDate(LocalDate deathDate) {
         this.deathDate = deathDate;
     }
@@ -83,41 +92,41 @@ public class Person implements Comparable<Person>{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate birthDate = null;
         LocalDate deathDate = null;
-        if (isNotEmpty(colums[1])){
+        if (isNotEmpty(colums[1])) {
             birthDate = LocalDate.parse(colums[1], formatter);
         }
-        if (isNotEmpty(colums[2])){
+        if (isNotEmpty(colums[2])) {
             deathDate = LocalDate.parse(colums[2], formatter);
-            if (isNotEmpty(colums[1]) && deathDate.isBefore(birthDate)){
+            if (isNotEmpty(colums[1]) && deathDate.isBefore(birthDate)) {
                 throw new NegativeLifespanException(flname[0], flname[1]);
             }
         }
         return new Person(flname[0], flname[1], birthDate, deathDate);
     }
 
-    public static List<Person> fromCsv(String path){
+    public static List<Person> fromCsv(String path) {
         List<Person> people = new ArrayList<>();
-        try{
+        try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line;
             br.readLine();
-            while((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 Person readPerson = fromCsvLine(line);
-                if (people.size() == 0){
+                if (people.size() == 0) {
                     people.add(readPerson);
                 }
-                for (int i = 0; i < people.size(); i++){
+                for (int i = 0; i < people.size(); i++) {
                     Person existingPerson = people.get(i);
-                    if(!existingPerson.fname.equals(readPerson.fname) ||
-                            !existingPerson.lname.equals(readPerson.lname)){
+                    if (!existingPerson.fname.equals(readPerson.fname) ||
+                            !existingPerson.lname.equals(readPerson.lname)) {
                         people.add(readPerson);
                     }
-                    if(!existingPerson.fname.equals(readPerson.fname) ||
-                            !existingPerson.lname.equals(readPerson.lname)){
+                    if (!existingPerson.fname.equals(readPerson.fname) ||
+                            !existingPerson.lname.equals(readPerson.lname)) {
                         people.add(readPerson);
                     }
-                    if(!existingPerson.fname.equals(readPerson.fname) ||
-                            !existingPerson.lname.equals(readPerson.lname)){
+                    if (!existingPerson.fname.equals(readPerson.fname) ||
+                            !existingPerson.lname.equals(readPerson.lname)) {
                         people.add(readPerson);
                     }
                 }
@@ -127,18 +136,18 @@ public class Person implements Comparable<Person>{
             System.err.println("File doesn't exist");
         } catch (IOException e) {
             System.err.println("Error during reading file");
-        } catch (NegativeLifespanException e){
+        } catch (NegativeLifespanException e) {
             System.err.println(e.getMessage());
         }
         return people;
     }
 
-    public String toUMLline(Person pipla){
+    public String toUMLline(Person pipla) {
         return "aaaaa";
     }
 
 
-    public String toUMLObject(){
+    public String toUMLObject() {
         Function<String, String> addQuotes = text -> "\"" + text + "\"";
         Function<Person, String> getFullnameWithSpace = pipla -> pipla.fname + " " + pipla.lname;
         Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
@@ -147,29 +156,30 @@ public class Person implements Comparable<Person>{
                         + " as " + getFullname.apply(pipla));
         return toUMLline.apply(this);
     }
-    public String toUMLRelation(){
-      //this to osoba z lewej
+
+    public String toUMLRelation() {
+        //this to osoba z lewej
         // father i mother z prawej
         //wywołać na this
         Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
-        Function<Person,String> getFatherRelation = pipla -> {
-            if(pipla.father != null)
-                return getFullname.apply(pipla)+
-                        " <-- "+getFullname.apply(pipla.father);
+        Function<Person, String> getFatherRelation = pipla -> {
+            if (pipla.father != null)
+                return getFullname.apply(pipla) +
+                        " <-- " + getFullname.apply(pipla.father);
             return "";
         };
 
-        Function<Person,String> getMotherRelation = pipla -> {
-            if(pipla.mother != null)
-            return getFullname.apply(pipla)+
-                " <-- "+getFullname.apply(pipla.mother);
+        Function<Person, String> getMotherRelation = pipla -> {
+            if (pipla.mother != null)
+                return getFullname.apply(pipla) +
+                        " <-- " + getFullname.apply(pipla.mother);
             return "";
         };
-        Function<Person,String> getAllRelations = pipla ->{
+        Function<Person, String> getAllRelations = pipla -> {
             String motherString = getMotherRelation.apply(pipla);
             String fatherString = getFatherRelation.apply(pipla);
-            if(motherString != "" && fatherString !=""){
-                return  motherString + "\n" + fatherString;
+            if (motherString != "" && fatherString != "") {
+                return motherString + "\n" + fatherString;
             }
             return motherString + fatherString;
         };
@@ -178,40 +188,60 @@ public class Person implements Comparable<Person>{
     }
 
 
-    public static boolean isNotEmpty(String s){
+    public static boolean isNotEmpty(String s) {
         return s != null && s != "" && s != " " && s != "\t";
     }
-    public static String toUmlfile(List<Person> people){
 
-        Function<List<Person>,String> convertToUML = list ->{
-          String openingTag = "@startuml" ;
-          String endingTag = "@enduml";
-          //Strzałka to mapowanie
-          List<String> objectLines = list.stream().map(pipla -> pipla.toUMLObject()).collect(Collectors.toList());
-          List<String> relationLines = list.stream().map(pipla -> pipla.toUMLRelation()).collect(Collectors.toList());
-          return openingTag+"\n" + String.join("\n",objectLines) + String.join("\n",relationLines) + endingTag;
+    public static String toUmlfile(List<Person> people) {
+
+        Function<List<Person>, String> convertToUML = list -> {
+            String openingTag = "@startuml";
+            String endingTag = "@enduml";
+            //Strzałka to mapowanie
+            List<String> objectLines = list.stream().map(pipla -> pipla.toUMLObject()).collect(Collectors.toList());
+            List<String> relationLines = list.stream().map(pipla -> pipla.toUMLRelation()).collect(Collectors.toList());
+            return openingTag + "\n" + String.join("\n", objectLines) + String.join("\n", relationLines) + endingTag;
 
         };
         return convertToUML.apply(people);
     }
+
     //zadanie 4
-    public static List<Person> filterList(List<Person> people,String key){
+    public static List<Person> filterList(List<Person> people, String key) {
         Function<Person, String> getFullname = pipla -> pipla.fname + pipla.lname;
         return people.stream().filter(pipla -> getFullname.apply(pipla).contains(key)).collect(Collectors.toList());
     }
-    // nasz komparator ma porównywać po samym roku
-    public static List<Person> sortPeopleByBirthYear(List<Person>people){
-        return people.stream().sorted((p1,p2)->Integer.compare(
-            p1.birthDate.getYear(), p2.birthDate.getYear())).collect(Collectors.toList());
 
-        };
+    // nasz komparator ma porównywać po samym roku
+    public static List<Person> sortPeopleByBirthYear(List<Person> people) {
+        return people.stream().sorted((pipla1, pipla2) -> Integer.compare(
+                pipla1.birthDate.getYear(), pipla2.birthDate.getYear())).collect(Collectors.toList());
+
     }
+
+
+
+    public static List<Person> getSortedDeceased(List<Person> people) {
+        return people.stream()
+                .filter(pipla -> pipla.getBirthDate() != null && pipla.getDeathDate() != null)
+                .sorted((pipla1, pipla2) -> {
+                    long lifeSpan1 = Period.between(pipla1.birthDate, pipla1.deathDate).getYears();
+                    long lifeSpan2 = Period.between(pipla2.birthDate, pipla2.deathDate).getYears();
+                    return Long.compare(lifeSpan2, lifeSpan1);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void setFather(Person parent) {
+        this.father = parent;
+
+    }
+}
     //6 też
 
 
 
 
-//    public void setFather(Person parent) {
-//        this.father = parent;
+
 
 

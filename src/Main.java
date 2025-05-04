@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +20,25 @@ public class Main {
         people.add(child2);
         people.add(child3);
         people.add(child4);
-   //     child1.setFather(parent);
+     child1.setFather(parent);
         parent.adopt(child1);
         parent.adopt(child2);
         parent.adopt(child3);
         parent.adopt(child4);
-//        System.out.println("ufjjdjjdjdd");
+        //System.out.println("ufjjdjjdjdd");
         List<Person> sortPeopleByBirthYear = Person.sortPeopleByBirthYear(people);
         for(Person p : sortPeopleByBirthYear){
-            System.out.println(p.getFname()+ " "+p.getLname()+ " "+ p.birthDate.getYear());
+           System.out.println(p.getFname()+ " "+p.getLname()+ " "+ p.getBirthDate().getYear());
         }
+        List<Person> getSortedDeceased = Person.getSortedDeceased(people);
+        for(Person p : getSortedDeceased){
+            if(p.getDeathDate()!=null) {
+                long lifespan = Period.between(p.getBirthDate(), p.getDeathDate()).getYears();
+                System.out.println(p.getFname() + " " + p.getLname() + " " + lifespan + "\n");
+
+            }
+        }
+
 
 
     }
