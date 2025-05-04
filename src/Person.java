@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class Person implements Comparable<Person>{
     private String fname, lname;
-    private LocalDate birthDate;
+    LocalDate birthDate;
     private Person father;
     private Person mother;
 
@@ -200,15 +200,18 @@ public class Person implements Comparable<Person>{
         return people.stream().filter(pipla -> getFullname.apply(pipla).contains(key)).collect(Collectors.toList());
     }
     // nasz komparator ma porównywać po samym roku
-//    public static List<Person> sortPeopleByBirthYear(List<Person>people){
-//        return people.stream().sorted();
-//    }
+    public static List<Person> sortPeopleByBirthYear(List<Person>people){
+        return people.stream().sorted((p1,p2)->Integer.compare(
+            p1.birthDate.getYear(), p2.birthDate.getYear())).collect(Collectors.toList());
+
+        };
+    }
     //6 też
 
 
 
 
-    public void setFather(Person parent) {
-        this.father = parent;
-    }
-}
+//    public void setFather(Person parent) {
+//        this.father = parent;
+
+

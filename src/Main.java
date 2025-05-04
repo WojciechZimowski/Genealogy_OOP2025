@@ -19,12 +19,16 @@ public class Main {
         people.add(child2);
         people.add(child3);
         people.add(child4);
-        child1.setFather(parent);
+   //     child1.setFather(parent);
         parent.adopt(child1);
         parent.adopt(child2);
         parent.adopt(child3);
         parent.adopt(child4);
 //        System.out.println("ufjjdjjdjdd");
+        List<Person> sortPeopleByBirthYear = Person.sortPeopleByBirthYear(people);
+        for(Person p : sortPeopleByBirthYear){
+            System.out.println(p.getFname()+ " "+p.getLname()+ " "+ p.birthDate.getYear());
+        }
 
 
     }
