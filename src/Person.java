@@ -212,7 +212,7 @@ public class Person implements Comparable<Person> {
         return people.stream().filter(pipla -> getFullname.apply(pipla).contains(key)).collect(Collectors.toList());
     }
 
-    // nasz komparator ma porównywać po samym roku
+//PD:ZADANIE 5
     public static List<Person> sortPeopleByBirthYear(List<Person> people) {
         return people.stream().sorted((pipla1, pipla2) -> Integer.compare(
                 pipla1.birthDate.getYear(), pipla2.birthDate.getYear())).collect(Collectors.toList());
@@ -220,7 +220,7 @@ public class Person implements Comparable<Person> {
     }
 
 
-
+//PD:ZADANIE 6
     public static List<Person> getSortedDeceased(List<Person> people) {
         return people.stream()
                 .filter(pipla -> pipla.getBirthDate() != null && pipla.getDeathDate() != null)
