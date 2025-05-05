@@ -1,8 +1,5 @@
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Person implements Comparable<Person> {
+public class Person implements Comparable<Person>, Serializable {
     private String fname, lname;
     private LocalDate birthDate;
     private Person father;
@@ -212,7 +209,7 @@ public class Person implements Comparable<Person> {
         return people.stream().filter(pipla -> getFullname.apply(pipla).contains(key)).collect(Collectors.toList());
     }
 
-//PD:ZADANIE 5
+    //PD:ZADANIE 5
     public static List<Person> sortPeopleByBirthYear(List<Person> people) {
         return people.stream().sorted((pipla1, pipla2) -> Integer.compare(
                 pipla1.birthDate.getYear(), pipla2.birthDate.getYear())).collect(Collectors.toList());
@@ -220,7 +217,7 @@ public class Person implements Comparable<Person> {
     }
 
 
-//PD:ZADANIE 6
+    //PD:ZADANIE 6
     public static List<Person> getSortedDeceased(List<Person> people) {
         return people.stream()
                 .filter(pipla -> pipla.getBirthDate() != null && pipla.getDeathDate() != null)
@@ -236,8 +233,47 @@ public class Person implements Comparable<Person> {
         this.father = parent;
 
     }
+
+    //pliki i wyjątki
+    public static void saveToBinaryFile(List<Person> people, String path) {
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+            oos.writeObject(people);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {//w przypadku braku uprawnien, albo uszkodzenia pliku
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<Person> readFromBinaryFile(String path) {
+        List<Person> people = new ArrayList<>();
+        //plik może się popsuć więc nawet tu trzeba zrobić try/catcha
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+            //nie mam pojęcia co to jest, piszę Object :)
+            Object obj = ois.readObject();
+            if(obj instanceof List){
+             List<?> list =(List<?>) obj;
+             for(Object o : list){
+                 if(o instanceof  Person){
+                     people.add((Person) o);
+                 }
+             }
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    return people;
+    }
 }
-    //6 też
+
 
 
 
