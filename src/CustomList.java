@@ -53,6 +53,12 @@ public class CustomList<T> extends AbstractList<T> {
         size++;
 
     }
+    public boolean add(T value){
+        int prevSize = size;
+        addLast(value);
+        return size > prevSize;
+
+    }
     public  T removeLast(){
 
         if(tail != null){
