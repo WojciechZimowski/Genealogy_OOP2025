@@ -1,4 +1,8 @@
 import java.util.AbstractList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class CustomList<T> extends AbstractList<T> {
 
@@ -114,6 +118,47 @@ public class CustomList<T> extends AbstractList<T> {
         }
         size++;
 
+    }
+    public Iterator<T> iterator(){
+        return  new Iterator<T>() {
+            private Node<T> current=head;
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public T next() {
+                    if(!hasNext()){
+                        throw new java.util.NoSuchElementException();
+                    }
+                    T value = current.value;
+                    current = current.next;
+                return value;
+            }
+        };
+    }
+    public Stream<T> stream(){
+        Iterable<T> iterable = () -> new Iterator<T>() {
+            private Node<T>current = head;
+            @Override
+            public boolean hasNext() {
+                return current!=null;
+            }
+
+            @Override
+            public T next() {
+                if(!hasNext()){
+                    throw  new java.util.NoSuchElementException();
+                }
+                T value = current.value;
+                current = current.next;
+                return value;
+
+
+            }
+        };
+        return StreamSupport.stream(iterable.spliterator(),false);
     }
     }
 
