@@ -1,6 +1,4 @@
-import java.util.AbstractList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -124,7 +122,7 @@ public class CustomList<T> extends AbstractList<T> {
             private Node<T> current=head;
             @Override
             public boolean hasNext() {
-                return false;
+                return current != null;
             }
 
             @Override
@@ -159,6 +157,17 @@ public class CustomList<T> extends AbstractList<T> {
             }
         };
         return StreamSupport.stream(iterable.spliterator(),false);
+    }
+    //Zadanie 4 PD programowanie generyczne
+    public  static <T> List<T> returnPointedClass(List<T> list, Class<?> cas){
+        List<T> result = new ArrayList<>();
+        for(T element : list){
+            //if(element != null && element.getClass().equals(list))
+            if(element != null && cas.isAssignableFrom(element.getClass())){
+                result.add(element);
+            }
+        }
+        return result;
     }
     }
 

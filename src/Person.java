@@ -100,6 +100,10 @@ public class Person implements Comparable<Person>, Serializable {
         }
         return new Person(flname[0], flname[1], birthDate, deathDate);
     }
+    public String toString(){
+       String deathDateStr = (deathDate == null)? " " : deathDate.toString();
+        return fname + " " + lname+" "+birthDate+" "+deathDateStr;
+    }
 
     public static List<Person> fromCsv(String path) {
         List<Person> people = new ArrayList<>();

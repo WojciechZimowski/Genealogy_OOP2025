@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,24 +27,43 @@ public class Main {
         parent.adopt(child3);
         parent.adopt(child4);
         //System.out.println("ufjjdjjdjdd");
-        //zadanie 5
-        System.out.println("\n Zadanie 5 Latami urodzenia do najmłodszego\n");
+        //zadanie 5 programowanie funkcyjne PD
+        //System.out.println("\n Zadanie 5 Latami urodzenia do najmłodszego\n");
         List<Person> sortPeopleByBirthYear = Person.sortPeopleByBirthYear(people);
         for(Person p : sortPeopleByBirthYear){
-           System.out.println(p.getFname()+ " "+p.getLname()+ " "+ p.getBirthDate().getYear());
+           //System.out.println(p.getFname()+ " "+p.getLname()+ " "+ p.getBirthDate().getYear());
         }
-        System.out.println("\n Zadanie 6 Latami życia w dół\n");
-        //zadanie 6
+       // System.out.println("\n Zadanie 6 Latami życia w dół\n");
+        //zadanie 6 programowanie funkcyjne Pd
         List<Person> getSortedDeceased = Person.getSortedDeceased(people);
         for(Person p : getSortedDeceased){
             if(p.getDeathDate()!=null) {
                 long lifespan = Period.between(p.getBirthDate(), p.getDeathDate()).getYears();
-                System.out.println(p.getFname() + " " + p.getLname() + " " + lifespan + "lat");
+                //System.out.println(p.getFname() + " " + p.getLname() + " " + lifespan + "lat");
 
             }
         }
+        //zadnie 3 programowanie Generyczne
+        CustomList<Person> iterableList = new CustomList<>();
+        iterableList.add(parent);
+        iterableList.add(child1);
+        iterableList.add(child2);
+        iterableList.add(child3);
+        iterableList.add(child4);
+        for(Person p : iterableList){
+            //System.out.println(p.getFname()+" "+ p.getLname());
+        }
+        //Zadanie 4 PD programowanie generyczne
+        List<Object> random = List.of(new Person("Jan"," Ian", LocalDate.of(2000,2,2)),
+                43,
+                24);
+        List<Object> persons = CustomList.returnPointedClass(random, Person.class);
+
+        for(Object obj: persons){
+            System.out.println(obj);
+        }
+
+        };
 
 
-
-    }
 }
