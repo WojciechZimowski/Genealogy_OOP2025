@@ -117,6 +117,7 @@ public class CustomList<T> extends AbstractList<T> {
         size++;
 
     }
+    //Zadanie 3 PD programowanie generyczne
     public Iterator<T> iterator(){
         return  new Iterator<T>() {
             private Node<T> current=head;
